@@ -63,10 +63,67 @@ class JobDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            infoRow(Icons.location_on, 'Location', job.location),
-            infoRow(Icons.calendar_today, 'Last Date', job.lastDate),
-            infoRow(Icons.category, 'Category', job.category),
-            const SizedBox(height: 30),
+           infoRow(Icons.location_on, 'Location', job.location),
+infoRow(Icons.calendar_today, 'Last Date', job.lastDate),
+infoRow(Icons.category, 'Category', job.category),
+const SizedBox(height: 20),
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.orange.shade50,
+    borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: Colors.orange.shade100),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(Icons.info_outline, color: Colors.orange.shade700, size: 20),
+          const SizedBox(width: 8),
+          Text(
+            'Exam Centre Info',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: Colors.orange.shade700,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Text(
+        job.examInfo,
+        style: TextStyle(
+          fontSize: 13,
+          color: Colors.grey.shade700,
+          height: 1.4,
+        ),
+      ),
+      const SizedBox(height: 12),
+      GestureDetector(
+        onTap: () => openLink(
+            'https://www.google.com/maps/search/${Uri.encodeComponent(job.location)}'),
+        child: Row(
+          children: [
+            Icon(Icons.map_outlined, color: Colors.blue.shade700, size: 18),
+            const SizedBox(width: 6),
+            Text(
+              'View ${job.location} on Map',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
+const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
