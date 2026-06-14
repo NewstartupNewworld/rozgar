@@ -5,6 +5,7 @@ class Job {
   final String lastDate;
   final String category;
   final String applyLink;
+  final bool isGovernment;
 
   Job({
     required this.title,
@@ -13,5 +14,6 @@ class Job {
     required this.lastDate,
     required this.category,
     required this.applyLink,
+    this.isGovernment = true,
   });
 }

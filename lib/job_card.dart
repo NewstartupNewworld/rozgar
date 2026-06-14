@@ -28,76 +28,132 @@ class _JobCardState extends State<JobCard> {
           ),
         );
       },
-      child: Card(
+      child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.job.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.job.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      height: 1.3,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        savedManager.toggleSave(widget.job);
-                      });
-                    },
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      savedManager.toggleSave(widget.job);
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isSaved
+                          ? Colors.blue.shade50
+                          : Colors.grey.shade100,
+                      shape: BoxShape.circle,
+                    ),
                     child: Icon(
                       isSaved ? Icons.bookmark : Icons.bookmark_outline,
                       color: Colors.blue,
+                      size: 20,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                widget.job.organization,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
                 ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.job.organization,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, size: 16, color: Colors.blue),
-                  const SizedBox(width: 4),
-                  Text(widget.job.location),
-                  const SizedBox(width: 16),
-                  const Icon(Icons.calendar_today, size: 16, color: Colors.red),
-                  const SizedBox(width: 4),
-                  Text('Last date: ${widget.job.lastDate}'),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(6),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Icon(Icons.location_on_outlined,
+                    size: 16, color: Colors.grey.shade500),
+                const SizedBox(width: 4),
+                Text(
+                  widget.job.location,
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                 ),
-                child: Text(
-                  widget.job.category,
-                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                const SizedBox(width: 16),
+                Icon(Icons.calendar_today_outlined,
+                    size: 16, color: Colors.grey.shade500),
+                const SizedBox(width: 4),
+                Text(
+                  widget.job.lastDate,
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    widget.job.category,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: widget.job.isGovernment
+                        ? Colors.green.shade50
+                        : Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    widget.job.isGovernment ? 'Government' : 'Private',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: widget.job.isGovernment
+                          ? Colors.green.shade700
+                          : Colors.orange.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'job_model.dart';
 
 List<Job> sampleJobs = [
+  // SSC
   Job(
     title: 'SSC CGL 2026 - Combined Graduate Level',
     organization: 'Staff Selection Commission',
@@ -10,44 +11,22 @@ List<Job> sampleJobs = [
     applyLink: 'https://ssc.gov.in',
   ),
   Job(
-    title: 'RRB NTPC Graduate Level Posts',
-    organization: 'Railway Recruitment Board',
-    location: 'All India',
-    lastDate: '15 July 2026',
-    category: 'Railway',
-    applyLink: 'https://indianrailways.gov.in',
-  ),
-  Job(
-    title: 'UPSC Civil Services Examination 2026',
-    organization: 'Union Public Service Commission',
-    location: 'All India',
-    lastDate: '10 August 2026',
-    category: 'UPSC',
-    applyLink: 'https://upsc.gov.in',
-  ),
-  Job(
-    title: 'IBPS PO Recruitment 2026',
-    organization: 'Institute of Banking Personnel Selection',
-    location: 'All India',
-    lastDate: '20 July 2026',
-    category: 'Banking',
-    applyLink: 'https://ibps.in',
-  ),
-  Job(
-    title: 'Indian Army - Technical Entry Scheme',
-    organization: 'Indian Army',
-    location: 'All India',
-    lastDate: '25 July 2026',
-    category: 'Defence',
-    applyLink: 'https://joinindianarmy.nic.in',
-  ),
-  Job(
     title: 'SSC CHSL 2026 - 10+2 Level Posts',
     organization: 'Staff Selection Commission',
     location: 'All India',
     lastDate: '05 August 2026',
     category: 'SSC',
     applyLink: 'https://ssc.gov.in',
+  ),
+
+  // Railway
+  Job(
+    title: 'RRB NTPC Graduate Level Posts',
+    organization: 'Railway Recruitment Board',
+    location: 'All India',
+    lastDate: '15 July 2026',
+    category: 'Railway',
+    applyLink: 'https://indianrailways.gov.in',
   ),
   Job(
     title: 'RRB Group D Recruitment 2026',
@@ -57,6 +36,34 @@ List<Job> sampleJobs = [
     category: 'Railway',
     applyLink: 'https://indianrailways.gov.in',
   ),
+
+  // UPSC
+  Job(
+    title: 'UPSC Civil Services Examination 2026',
+    organization: 'Union Public Service Commission',
+    location: 'All India',
+    lastDate: '10 August 2026',
+    category: 'UPSC',
+    applyLink: 'https://upsc.gov.in',
+  ),
+  Job(
+    title: 'UPSC NDA and NA Examination 2026',
+    organization: 'Union Public Service Commission',
+    location: 'All India',
+    lastDate: '30 August 2026',
+    category: 'UPSC',
+    applyLink: 'https://upsc.gov.in',
+  ),
+
+  // Banking
+  Job(
+    title: 'IBPS PO Recruitment 2026',
+    organization: 'Institute of Banking Personnel Selection',
+    location: 'All India',
+    lastDate: '20 July 2026',
+    category: 'Banking',
+    applyLink: 'https://ibps.in',
+  ),
   Job(
     title: 'SBI Clerk Recruitment 2026',
     organization: 'State Bank of India',
@@ -64,6 +71,16 @@ List<Job> sampleJobs = [
     lastDate: '18 August 2026',
     category: 'Banking',
     applyLink: 'https://sbi.co.in/careers',
+  ),
+
+  // Defence
+  Job(
+    title: 'Indian Army - Technical Entry Scheme',
+    organization: 'Indian Army',
+    location: 'All India',
+    lastDate: '25 July 2026',
+    category: 'Defence',
+    applyLink: 'https://joinindianarmy.nic.in',
   ),
   Job(
     title: 'Indian Navy - Sailor Entry 2026',
@@ -73,12 +90,91 @@ List<Job> sampleJobs = [
     category: 'Defence',
     applyLink: 'https://joinindiannavy.gov.in',
   ),
+
+  // Teaching - Government
   Job(
-    title: 'UPSC NDA and NA Examination 2026',
-    organization: 'Union Public Service Commission',
+    title: 'KVS Teacher Recruitment 2026 (PGT/TGT)',
+    organization: 'Kendriya Vidyalaya Sangathan',
     location: 'All India',
-    lastDate: '30 August 2026',
-    category: 'UPSC',
-    applyLink: 'https://upsc.gov.in',
+    lastDate: '15 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://kvsangathan.nic.in',
+  ),
+  Job(
+    title: 'CTET 2026 - Central Teacher Eligibility Test',
+    organization: 'CBSE',
+    location: 'All India',
+    lastDate: '20 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://ctet.nic.in',
+  ),
+
+  // Teaching - Private
+  Job(
+    title: 'Mathematics Teacher (Grade 9-10)',
+    organization: 'Delhi Public School, Bangalore',
+    location: 'Bangalore, Karnataka',
+    lastDate: '10 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://dpsbangalore.edu.in',
+    isGovernment: false,
+  ),
+
+  // Medical - Government
+  Job(
+    title: 'AIIMS Staff Nurse Recruitment 2026',
+    organization: 'All India Institute of Medical Sciences',
+    location: 'All India',
+    lastDate: '28 July 2026',
+    category: 'Medical',
+    applyLink: 'https://aiims.edu',
+  ),
+  Job(
+    title: 'ESIC Medical Officer Recruitment 2026',
+    organization: 'Employees State Insurance Corporation',
+    location: 'All India',
+    lastDate: '05 August 2026',
+    category: 'Medical',
+    applyLink: 'https://esic.gov.in',
+  ),
+
+  // Medical - Private
+  Job(
+    title: 'General Physician - Apollo Hospital',
+    organization: 'Apollo Hospitals',
+    location: 'Chennai, Tamil Nadu',
+    lastDate: '15 July 2026',
+    category: 'Medical',
+    applyLink: 'https://apollohospitals.com/careers',
+    isGovernment: false,
+  ),
+
+  // Sports - Government
+  Job(
+    title: 'Sports Authority of India - Coach Recruitment',
+    organization: 'Sports Authority of India',
+    location: 'All India',
+    lastDate: '20 August 2026',
+    category: 'Sports',
+    applyLink: 'https://sportsauthorityofindia.nic.in',
+  ),
+  Job(
+    title: 'Indian Army Sports Quota Recruitment',
+    organization: 'Indian Army',
+    location: 'All India',
+    lastDate: '25 August 2026',
+    category: 'Sports',
+    applyLink: 'https://joinindianarmy.nic.in',
+  ),
+
+  // Sports - Private
+  Job(
+    title: 'Cricket Coach - Junior Academy',
+    organization: 'MRF Pace Foundation',
+    location: 'Chennai, Tamil Nadu',
+    lastDate: '12 July 2026',
+    category: 'Sports',
+    applyLink: 'https://mrfpacefoundation.com',
+    isGovernment: false,
   ),
 ];
