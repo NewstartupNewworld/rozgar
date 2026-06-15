@@ -108,6 +108,22 @@ List<Job> sampleJobs = [
     category: 'Teaching',
     applyLink: 'https://ctet.nic.in',
   ),
+  Job(
+    title: 'Primary Teacher Recruitment (DSSSB)',
+    organization: 'Delhi Subordinate Services Selection Board',
+    location: 'Delhi',
+    lastDate: '22 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://dsssb.delhi.gov.in',
+  ),
+  Job(
+    title: 'Assistant Professor Recruitment - State University',
+    organization: 'State Higher Education Department',
+    location: 'All India',
+    lastDate: '28 August 2026',
+    category: 'Teaching',
+    applyLink: 'https://ugc.gov.in',
+  ),
 
   // Teaching - Private
   Job(
@@ -117,6 +133,24 @@ List<Job> sampleJobs = [
     lastDate: '10 July 2026',
     category: 'Teaching',
     applyLink: 'https://dpsbangalore.edu.in',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Pre-Primary Teacher (Montessori Trained)',
+    organization: 'Kidzee Preschool',
+    location: 'Pune, Maharashtra',
+    lastDate: '12 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://kidzee.com/careers',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Physics Faculty - Coaching Institute',
+    organization: 'Aakash Institute',
+    location: 'Kota, Rajasthan',
+    lastDate: '25 July 2026',
+    category: 'Teaching',
+    applyLink: 'https://aakash.ac.in/careers',
     isGovernment: false,
   ),
 
@@ -137,6 +171,22 @@ List<Job> sampleJobs = [
     category: 'Medical',
     applyLink: 'https://esic.gov.in',
   ),
+  Job(
+    title: 'Staff Nurse Recruitment - District Hospitals',
+    organization: 'State Health Department',
+    location: 'All India',
+    lastDate: '10 August 2026',
+    category: 'Medical',
+    applyLink: 'https://nhm.gov.in',
+  ),
+  Job(
+    title: 'Lab Technician - Government Hospitals',
+    organization: 'Ministry of Health and Family Welfare',
+    location: 'All India',
+    lastDate: '15 August 2026',
+    category: 'Medical',
+    applyLink: 'https://mohfw.gov.in',
+  ),
 
   // Medical - Private
   Job(
@@ -146,6 +196,24 @@ List<Job> sampleJobs = [
     lastDate: '15 July 2026',
     category: 'Medical',
     applyLink: 'https://apollohospitals.com/careers',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Staff Nurse - ICU Department',
+    organization: 'Fortis Healthcare',
+    location: 'Delhi NCR',
+    lastDate: '20 July 2026',
+    category: 'Medical',
+    applyLink: 'https://fortishealthcare.com/careers',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Pharmacist - Retail Pharmacy Chain',
+    organization: 'Apollo Pharmacy',
+    location: 'Hyderabad, Telangana',
+    lastDate: '18 July 2026',
+    category: 'Medical',
+    applyLink: 'https://apollopharmacy.in/careers',
     isGovernment: false,
   ),
 
@@ -166,6 +234,14 @@ List<Job> sampleJobs = [
     category: 'Sports',
     applyLink: 'https://joinindianarmy.nic.in',
   ),
+  Job(
+    title: 'Physical Education Teacher (PET) Recruitment',
+    organization: 'State Education Department',
+    location: 'All India',
+    lastDate: '30 July 2026',
+    category: 'Sports',
+    applyLink: 'https://education.gov.in',
+  ),
 
   // Sports - Private
   Job(
@@ -175,6 +251,24 @@ List<Job> sampleJobs = [
     lastDate: '12 July 2026',
     category: 'Sports',
     applyLink: 'https://mrfpacefoundation.com',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Fitness Trainer - Gym Chain',
+    organization: 'Cult.fit',
+    location: 'Bangalore, Karnataka',
+    lastDate: '15 July 2026',
+    category: 'Sports',
+    applyLink: 'https://cult.fit/careers',
+    isGovernment: false,
+  ),
+  Job(
+    title: 'Football Coach - Youth Academy',
+    organization: 'Bhaichung Bhutia Football Schools',
+    location: 'Kolkata, West Bengal',
+    lastDate: '20 July 2026',
+    category: 'Sports',
+    applyLink: 'https://bbfs.in',
     isGovernment: false,
   ),
 ];

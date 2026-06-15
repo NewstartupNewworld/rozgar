@@ -124,6 +124,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String searchQuery = '';
   String selectedCategory = 'All';
+  String selectedType = 'All';
   List<Job> filteredJobs = sampleJobs;
 
   final List<String> categories = [
@@ -150,7 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
             job.title.contains(selectedCategory) ||
             job.organization.contains(selectedCategory) ||
             job.category == selectedCategory;
-        return matchesSearch && matchesCategory;
+        final matchesType = selectedType == 'All' ||
+            (selectedType == 'Government' && job.isGovernment) ||
+            (selectedType == 'Private' && !job.isGovernment);
+        return matchesSearch && matchesCategory && matchesType;
       }).toList();
     });
   }
@@ -162,6 +166,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onCategorySelected(String category) {
     selectedCategory = category;
+    if (category != 'Medical' &&
+        category != 'Teaching' &&
+        category != 'Sports') {
+      selectedType = 'All';
+    }
+    filterJobs();
+  }
+
+  void onTypeSelected(String type) {
+    selectedType = type;
     filterJobs();
   }
 
@@ -310,6 +324,49 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
+              if (selectedCategory == 'Medical' ||
+                  selectedCategory == 'Teaching' ||
+                  selectedCategory == 'Sports')
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                  child: Row(
+                    children: ['All', 'Government', 'Private'].map((type) {
+                      final isSelected = selectedType == type;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () => onTypeSelected(type),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.green.shade600
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected
+                                    ? Colors.green.shade600
+                                    : Colors.grey.shade300,
+                              ),
+                            ),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? Colors.white
+                                    : Colors.grey.shade700,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
               const SizedBox(height: 8),
               if (getRecommendedJobs().isNotEmpty &&
                   selectedCategory == 'All' &&
