@@ -15,9 +15,29 @@ class JobCard extends StatefulWidget {
 class _JobCardState extends State<JobCard> {
   final SavedJobsManager savedManager = SavedJobsManager();
 
+  int? getDaysLeft(String lastDate) {
+    try {
+      final parts = lastDate.split(' ');
+      final day = int.parse(parts[0]);
+      final months = {
+        'January': 1, 'February': 2, 'March': 3, 'April': 4,
+        'May': 5, 'June': 6, 'July': 7, 'August': 8,
+        'September': 9, 'October': 10, 'November': 11, 'December': 12,
+      };
+      final month = months[parts[1]] ?? 1;
+      final year = int.parse(parts[2]);
+      final deadline = DateTime(year, month, day);
+      final today = DateTime.now();
+      return deadline.difference(today).inDays;
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isSaved = savedManager.isSaved(widget.job);
+    final daysLeft = getDaysLeft(widget.job.lastDate);
 
     return GestureDetector(
       onTap: () {
@@ -36,7 +56,7 @@ class _JobCardState extends State<JobCard> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -92,7 +112,8 @@ class _JobCardState extends State<JobCard> {
               ),
             ),
             const SizedBox(height: 14),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Icon(Icons.location_on_outlined,
                     size: 16, color: Colors.grey.shade500),
@@ -109,6 +130,25 @@ class _JobCardState extends State<JobCard> {
                   widget.job.lastDate,
                   style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                 ),
+                if (daysLeft != null && daysLeft >= 0 && daysLeft <= 14) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '$daysLeft days left',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.red.shade700,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 14),
