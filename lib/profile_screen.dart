@@ -1,3 +1,4 @@
+import 'theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'edit_profile_screen.dart';
 
@@ -91,12 +92,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ? 'SSC, Railway, UPSC...'
                       : profile.preferredCategory,
                 ),
-                profileItem(
+               profileItem(
                   Icons.location_on,
                   'Preferred Location',
                   profile.preferredLocation.isEmpty
                       ? 'Add your state'
                       : profile.preferredLocation,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.dark_mode_outlined,
+                            color: Colors.blue, size: 22),
+                      ),
+                      const SizedBox(width: 14),
+                      const Expanded(
+                        child: Text(
+                          'Dark Mode',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 15),
+                        ),
+                      ),
+                      Switch(
+                        value: ThemeManager().isDarkMode,
+                        activeThumbColor: Colors.blue,
+                        onChanged: (value) {
+                          setState(() {
+                            ThemeManager().toggleTheme();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

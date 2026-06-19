@@ -416,17 +416,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              filteredJobs.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 60),
-                      child: Center(
-                        child: Text(
-                          'No jobs found!',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
-                        ),
-                      ),
-                    )
-                  : Column(
+             filteredJobs.isEmpty
+    ? Padding(
+        padding: const EdgeInsets.symmetric(vertical: 60),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(Icons.search_off,
+                  size: 64, color: Colors.grey.shade300),
+              const SizedBox(height: 16),
+              const Text(
+                'No jobs found',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Try a different search or filter',
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+              ),
+            ],
+          ),
+        ),
+      )
+    : Column(
                       children: filteredJobs
                           .map((job) => JobCard(job: job))
                           .toList(),
