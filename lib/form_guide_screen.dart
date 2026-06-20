@@ -134,6 +134,102 @@ class FormGuideScreen extends StatelessWidget {
               'General/OBC: ₹850. SC/ST/PwD: ₹175. Pay via debit/credit card, net banking, or UPI. Take a printout of the final submitted form.',
         },
       ],
+      'Teaching': [
+        {
+          'step': 'Step 1',
+          'title': 'Check Eligibility',
+          'detail':
+              'For government teaching jobs, check if you have B.Ed/D.El.Ed degree. For CTET, you need 50% in graduation + B.Ed. For KVS/NVS, check specific educational requirements for PGT/TGT/PRT posts.',
+        },
+        {
+          'step': 'Step 2',
+          'title': 'Register on Official Portal',
+          'detail':
+              'For CTET: visit ctet.nic.in. For KVS: visit kvsangathan.nic.in. For state teaching jobs: visit your state education board website. Create an account with your email and mobile number.',
+        },
+        {
+          'step': 'Step 3',
+          'title': 'Fill Application Form',
+          'detail':
+              'Enter personal details, educational qualifications, B.Ed/D.El.Ed marks, teaching experience (if any), preferred subject, and exam center. Select paper type (Paper 1 for classes 1-5, Paper 2 for classes 6-8) for CTET.',
+        },
+        {
+          'step': 'Step 4',
+          'title': 'Upload Documents',
+          'detail':
+              'Photo: passport size, 10-100 KB, JPG format. Signature: 3x1 inch, 10-100 KB. B.Ed/D.El.Ed certificate, graduation marksheet, and category certificate (if applicable) may also be required.',
+        },
+        {
+          'step': 'Step 5',
+          'title': 'Pay Fee and Submit',
+          'detail':
+              'CTET fee: General ₹1000 (both papers), SC/ST/PwD ₹500. Pay via debit/credit card, net banking, or UPI. Print confirmation page and keep it safe for admit card download later.',
+        },
+      ],
+      'Medical': [
+        {
+          'step': 'Step 1',
+          'title': 'Check Eligibility and Post',
+          'detail':
+              'Medical jobs have different requirements by role: Staff Nurse needs B.Sc Nursing/GNM, Lab Technician needs B.Sc MLT/DMLT, Medical Officer needs MBBS with MCI registration, Pharmacist needs B.Pharm/D.Pharm. Check exact requirements in the notification.',
+        },
+        {
+          'step': 'Step 2',
+          'title': 'Register on Official Portal',
+          'detail':
+              'For AIIMS: visit aiims.edu. For ESIC: visit esic.gov.in. For NHM (state): visit your state NHM website. For private hospitals: visit their careers page directly. Register with email and mobile number.',
+        },
+        {
+          'step': 'Step 3',
+          'title': 'Fill Application Form',
+          'detail':
+              'Enter personal details, nursing/medical qualification details, registration number from nursing council/MCI, work experience in years, specialization (ICU, OT, Pediatrics etc.), and preferred posting location.',
+        },
+        {
+          'step': 'Step 4',
+          'title': 'Upload Documents',
+          'detail':
+              'Photo: passport size, JPG, 20-50 KB. Signature: JPG, 10-30 KB. Nursing council registration certificate, degree certificate, internship completion certificate, and experience certificate (if applicable).',
+        },
+        {
+          'step': 'Step 5',
+          'title': 'Pay Fee and Submit',
+          'detail':
+              'Fee varies by organization: AIIMS Staff Nurse ₹3000 (General), ₹0 (SC/ST/PwD). ESIC ₹500 (General), ₹250 (SC/ST). Pay online and download the confirmation receipt. Keep registration number safe.',
+        },
+      ],
+      'Sports': [
+        {
+          'step': 'Step 1',
+          'title': 'Check Sports Eligibility',
+          'detail':
+              'For SAI Coach: need NIS Diploma/B.P.Ed with sports achievements. For Army Sports Quota: need state/national level certificates. For PE Teacher: need B.P.Ed degree. For private academies: need coaching experience and sports achievements.',
+        },
+        {
+          'step': 'Step 2',
+          'title': 'Gather Sports Certificates',
+          'detail':
+              'Collect all sports achievement certificates: district/state/national level participation certificates, medals, awards. These are crucial for sports quota applications. Also prepare your B.P.Ed/NIS diploma and coaching experience letters.',
+        },
+        {
+          'step': 'Step 3',
+          'title': 'Register and Fill Application',
+          'detail':
+              'For SAI: visit sportsauthorityofindia.nic.in. For Army: visit joinindianarmy.nic.in. Fill in personal details, sports discipline (cricket, football, athletics etc.), highest level of participation, and achievements.',
+        },
+        {
+          'step': 'Step 4',
+          'title': 'Upload Documents',
+          'detail':
+              'Photo: passport size, JPG. Signature: JPG. Sports achievement certificates, B.P.Ed/NIS certificate, physical fitness certificate from a registered doctor, and caste certificate if applicable.',
+        },
+        {
+          'step': 'Step 5',
+          'title': 'Physical Trial and Submission',
+          'detail':
+              'Most sports jobs require a physical trial/sports trial after written exam. Submit form online, download admit card, appear for written test if applicable, then attend sports trial with original certificates. Keep all documents ready.',
+        },
+      ],
     };
     return guides[category] ?? [];
   }

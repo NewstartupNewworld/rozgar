@@ -121,7 +121,7 @@ class StudyMaterialScreen extends StatelessWidget {
               final color = item['color'] as Color;
               return GestureDetector(
                 onTap: () {
-  final guidedCategories = ['SSC', 'Railway', 'UPSC', 'Banking'];
+  final guidedCategories = ['SSC', 'Railway', 'UPSC', 'Banking', 'Teaching', 'Medical', 'Sports'];
   if (guidedCategories.contains(item['category'])) {
     showModalBottomSheet(
       context: context,

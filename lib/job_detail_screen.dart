@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import 'job_model.dart';
 import 'review_model.dart';
 
@@ -24,6 +25,23 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         webOnlyWindowName: '_blank',
       );
     }
+  }
+
+  void shareJob() {
+    final text = '''
+🔔 Job Alert from Rozgar!
+
+📋 ${widget.job.title}
+🏢 ${widget.job.organization}
+📍 ${widget.job.location}
+📅 Last Date: ${widget.job.lastDate}
+🏷️ Category: ${widget.job.category}
+
+Apply here: ${widget.job.applyLink}
+
+Download Rozgar app to find more government jobs!
+''';
+    SharePlus.instance.share(ShareParams(text: text));
   }
 
   void openAddReviewSheet() {
@@ -151,6 +169,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share, color: Colors.white),
+            onPressed: shareJob,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
