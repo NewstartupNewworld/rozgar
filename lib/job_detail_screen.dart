@@ -1,6 +1,8 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:image_picker/image_picker.dart';
 import 'job_model.dart';
 import 'review_model.dart';
 
@@ -73,6 +75,8 @@ Download Rozgar app to find more government jobs!
     final commentController = TextEditingController();
     int selectedRating = 5;
     bool isSubmitting = false;
+    Uint8List? selectedImageBytes;
+    String? selectedImageName;
 
     showModalBottomSheet(
       context: context,
@@ -90,105 +94,168 @@ Download Rozgar app to find more government jobs!
                 top: 20,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Write a Review',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Your Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Write a Review',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Rating', style: TextStyle(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: List.generate(5, (index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setSheetState(() {
-                            selectedRating = index + 1;
-                          });
-                        },
-                        child: Icon(
-                          index < selectedRating
-                              ? Icons.star
-                              : Icons.star_border,
-                          color: Colors.amber,
-                          size: 32,
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: commentController,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      labelText: 'Your experience',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Your Name',
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: isSubmitting
-                          ? null
-                          : () async {
-                              if (nameController.text.isEmpty ||
-                                  commentController.text.isEmpty) {
-                                return;
-                              }
-                              setSheetState(() {
-                                isSubmitting = true;
-                              });
-                              await reviewsManager.addReview(
-                                widget.job.organization,
-                                Review(
-                                  reviewerName: nameController.text,
-                                  rating: selectedRating,
-                                  comment: commentController.text,
-                                ),
-                              );
-                              if (context.mounted) {
-                                Navigator.pop(context);
-                              }
-                              await loadReviews();
-                            },
-                      child: isSubmitting
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text('Submit Review',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16)),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    const Text('Rating',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: List.generate(5, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setSheetState(() {
+                              selectedRating = index + 1;
+                            });
+                          },
+                          child: Icon(
+                            index < selectedRating
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: Colors.amber,
+                            size: 32,
+                          ),
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Photo (optional)',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final picked = await picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (picked != null) {
+                          final bytes = await picked.readAsBytes();
+                          setSheetState(() {
+                            selectedImageBytes = bytes;
+                            selectedImageName = picked.name;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 100,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: selectedImageBytes != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.memory(selectedImageBytes!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: 100),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add_a_photo_outlined,
+                                      color: Colors.grey.shade400, size: 28),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Tap to add a photo',
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: commentController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Your experience',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: isSubmitting
+                            ? null
+                            : () async {
+                                if (nameController.text.isEmpty ||
+                                    commentController.text.isEmpty) {
+                                  return;
+                                }
+                                setSheetState(() {
+                                  isSubmitting = true;
+                                });
+                                String? uploadedImageUrl;
+                                if (selectedImageBytes != null &&
+                                    selectedImageName != null) {
+                                  uploadedImageUrl =
+                                      await reviewsManager.uploadImage(
+                                    selectedImageBytes!,
+                                    selectedImageName!,
+                                  );
+                                }
+                                await reviewsManager.addReview(
+                                  widget.job.organization,
+                                  Review(
+                                    reviewerName: nameController.text,
+                                    rating: selectedRating,
+                                    comment: commentController.text,
+                                    imageUrl: uploadedImageUrl,
+                                  ),
+                                );
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
+                                await loadReviews();
+                              },
+                        child: isSubmitting
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('Submit Review',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -267,7 +334,8 @@ Download Rozgar app to find more government jobs!
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.orange.shade700, size: 20),
+                      Icon(Icons.info_outline,
+                          color: Colors.orange.shade700, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         'Exam Centre Info',
@@ -294,7 +362,8 @@ Download Rozgar app to find more government jobs!
                         'https://www.google.com/maps/search/${Uri.encodeComponent(job.location)}'),
                     child: Row(
                       children: [
-                        Icon(Icons.map_outlined, color: Colors.blue.shade700, size: 18),
+                        Icon(Icons.map_outlined,
+                            color: Colors.blue.shade700, size: 18),
                         const SizedBox(width: 6),
                         Text(
                           'View ${job.location} on Map',
@@ -319,7 +388,8 @@ Download Rozgar app to find more government jobs!
                     children: [
                       const Text(
                         'Reviews',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       if (reviews.isNotEmpty) ...[
                         const SizedBox(width: 8),
@@ -327,7 +397,8 @@ Download Rozgar app to find more government jobs!
                         const SizedBox(width: 2),
                         Text(
                           '${avgRating.toStringAsFixed(1)} (${reviews.length})',
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                          style: TextStyle(
+                              color: Colors.grey.shade600, fontSize: 14),
                         ),
                       ],
                     ],
@@ -374,13 +445,16 @@ Download Rozgar app to find more government jobs!
                             children: [
                               Text(
                                 review.reviewerName,
-                                style: const TextStyle(fontWeight: FontWeight.w700),
+                                style:
+                                    const TextStyle(fontWeight: FontWeight.w700),
                               ),
                               const SizedBox(width: 8),
                               Row(
                                 children: List.generate(5, (index) {
                                   return Icon(
-                                    index < review.rating ? Icons.star : Icons.star_border,
+                                    index < review.rating
+                                        ? Icons.star
+                                        : Icons.star_border,
                                     color: Colors.amber,
                                     size: 14,
                                   );
@@ -391,8 +465,21 @@ Download Rozgar app to find more government jobs!
                           const SizedBox(height: 4),
                           Text(
                             review.comment,
-                            style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+                            style: TextStyle(
+                                color: Colors.grey.shade700, fontSize: 13),
                           ),
+                          if (review.imageUrl != null) ...[
+                            const SizedBox(height: 8),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                review.imageUrl!,
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     )),
