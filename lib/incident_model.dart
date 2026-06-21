@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Incident {
@@ -8,6 +9,7 @@ class Incident {
   final String category;
   final String reporterName;
   final int supportCount;
+  final String? imageUrl;
 
   Incident({
     this.id,
@@ -17,6 +19,7 @@ class Incident {
     required this.category,
     required this.reporterName,
     this.supportCount = 0,
+    this.imageUrl,
   });
 
   factory Incident.fromMap(Map<String, dynamic> map) {
@@ -28,6 +31,7 @@ class Incident {
       category: map['category'] ?? '',
       reporterName: map['reporter_name'] ?? 'Anonymous',
       supportCount: map['support_count'] ?? 0,
+      imageUrl: map['image_url'],
     );
   }
 }
@@ -48,6 +52,21 @@ class IncidentsManager {
     return (response as List).map((item) => Incident.fromMap(item)).toList();
   }
 
+  Future<String?> uploadImage(Uint8List imageBytes, String fileName) async {
+    try {
+      final path = '${DateTime.now().millisecondsSinceEpoch}_$fileName';
+      await supabase.storage.from('review-images').uploadBinary(
+            path,
+            imageBytes,
+          );
+      final publicUrl =
+          supabase.storage.from('review-images').getPublicUrl(path);
+      return publicUrl;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> addIncident(Incident incident) async {
     await supabase.from('incidents').insert({
       'title': incident.title,
@@ -56,6 +75,7 @@ class IncidentsManager {
       'category': incident.category,
       'reporter_name': incident.reporterName,
       'support_count': 0,
+      'image_url': incident.imageUrl,
     });
   }
 

@@ -1,4 +1,6 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'incident_model.dart';
 import 'incident_detail_screen.dart';
 
@@ -52,6 +54,8 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
     final nameController = TextEditingController();
     String selectedCategory = 'Exam Issue';
     bool isSubmitting = false;
+    Uint8List? selectedImageBytes;
+    String? selectedImageName;
 
     showModalBottomSheet(
       context: context,
@@ -157,6 +161,55 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    const Text('Photo (optional)',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final picked = await picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (picked != null) {
+                          final bytes = await picked.readAsBytes();
+                          setSheetState(() {
+                            selectedImageBytes = bytes;
+                            selectedImageName = picked.name;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 100,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: selectedImageBytes != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.memory(selectedImageBytes!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: 100),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add_a_photo_outlined,
+                                      color: Colors.grey.shade400, size: 28),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Tap to add evidence photo',
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
@@ -180,6 +233,15 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                                 setSheetState(() {
                                   isSubmitting = true;
                                 });
+                                String? uploadedImageUrl;
+                                if (selectedImageBytes != null &&
+                                    selectedImageName != null) {
+                                  uploadedImageUrl =
+                                      await incidentsManager.uploadImage(
+                                    selectedImageBytes!,
+                                    selectedImageName!,
+                                  );
+                                }
                                 await incidentsManager.addIncident(
                                   Incident(
                                     title: titleController.text,
@@ -187,6 +249,7 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                                     location: locationController.text,
                                     category: selectedCategory,
                                     reporterName: nameController.text,
+                                    imageUrl: uploadedImageUrl,
                                   ),
                                 );
                                 if (context.mounted) {
@@ -372,6 +435,18 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                                       height: 1.4,
                                     ),
                                   ),
+                                  if (incident.imageUrl != null) ...[
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        incident.imageUrl!,
+                                        height: 150,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
                                   const SizedBox(height: 10),
                                   Row(
                                     children: [

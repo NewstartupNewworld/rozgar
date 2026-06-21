@@ -208,6 +208,17 @@ class _IncidentDetailScreenState extends State<IncidentDetailScreen> {
               incident.description,
               style: const TextStyle(fontSize: 15, height: 1.5),
             ),
+            if (incident.imageUrl != null) ...[
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  incident.imageUrl!,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
             const SizedBox(height: 16),
             GestureDetector(
               onTap: support,
