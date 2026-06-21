@@ -134,6 +134,38 @@ class FormGuideScreen extends StatelessWidget {
               'General/OBC: ₹850. SC/ST/PwD: ₹175. Pay via debit/credit card, net banking, or UPI. Take a printout of the final submitted form.',
         },
       ],
+      'Defence': [
+        {
+          'step': 'Step 1',
+          'title': 'Check Eligibility and Entry Type',
+          'detail':
+              'Defence entries vary: NDA needs 12th pass (age 16.5-19.5), CDS needs graduation, Technical Entry needs engineering degree, Soldier/Sailor/Airman entries need 10th/12th pass with physical fitness standards. Check height, weight, and chest measurement requirements for your category.',
+        },
+        {
+          'step': 'Step 2',
+          'title': 'Register on Official Portal',
+          'detail':
+              'For Army: visit joinindianarmy.nic.in. For Navy: visit joinindiannavy.gov.in. For Air Force: visit careerindianairforce.cdac.in. For NDA/CDS: visit upsconline.nic.in. Create an account with your email and mobile number.',
+        },
+        {
+          'step': 'Step 3',
+          'title': 'Fill Application Form',
+          'detail':
+              'Enter personal details, educational qualifications, physical measurements (height, weight, chest), preferred service/branch, and nearest recruitment/rally centre. Sports or NCC certificates can add bonus points in some entries.',
+        },
+        {
+          'step': 'Step 4',
+          'title': 'Upload Documents',
+          'detail':
+              'Photo: passport size, JPG, 20-50 KB. Signature: JPG, 10-20 KB. 10th/12th marksheets, domicile certificate, NCC certificate (if applicable), and category certificate must be ready to upload or carry to the recruitment rally.',
+        },
+        {
+          'step': 'Step 5',
+          'title': 'Pay Fee and Prepare for Physical Test',
+          'detail':
+              'Fee is usually nil or minimal for Army/Navy/Air Force soldier-level entries; UPSC entries (NDA/CDS) charge around ₹100-200. After submission, prepare for a written exam followed by physical fitness test, medical exam, and interview — start running and exercise early.',
+        },
+      ],
       'Teaching': [
         {
           'step': 'Step 1',
