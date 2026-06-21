@@ -8,6 +8,7 @@ import 'study_material_screen.dart';
 import 'splash_screen.dart';
 import 'edit_profile_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'incidents_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,7 @@ class _RozgarAppState extends State<RozgarApp> {
   final List<Widget> screens = [
     const HomeScreen(),
     const SavedJobsScreen(),
+    const IncidentsScreen(),
     const StudyMaterialScreen(),
     const ProfileScreen(),
   ];
@@ -69,13 +71,14 @@ class _RozgarAppState extends State<RozgarApp> {
             ),
           ],
         ),
-        child: Row(
+       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             navItem(Icons.home_rounded, 'Home', 0),
             navItem(Icons.bookmark_rounded, 'Saved', 1),
-            navItem(Icons.menu_book_rounded, 'Study', 2),
-            navItem(Icons.person_rounded, 'Profile', 3),
+            navItem(Icons.report_rounded, 'Incidents', 2),
+            navItem(Icons.menu_book_rounded, 'Study', 3),
+            navItem(Icons.person_rounded, 'Profile', 4),
           ],
         ),
       ),
