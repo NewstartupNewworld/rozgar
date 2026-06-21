@@ -15,6 +15,30 @@ class JobDetailScreen extends StatefulWidget {
 
 class _JobDetailScreenState extends State<JobDetailScreen> {
   final ReviewsManager reviewsManager = ReviewsManager();
+  List<Review> reviews = [];
+  double avgRating = 0;
+  bool isLoadingReviews = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadReviews();
+  }
+
+  Future<void> loadReviews() async {
+    setState(() {
+      isLoadingReviews = true;
+    });
+    final fetchedReviews =
+        await reviewsManager.getReviews(widget.job.organization);
+    final fetchedAvg =
+        await reviewsManager.getAverageRating(widget.job.organization);
+    setState(() {
+      reviews = fetchedReviews;
+      avgRating = fetchedAvg;
+      isLoadingReviews = false;
+    });
+  }
 
   Future<void> openLink(String url) async {
     final Uri uri = Uri.parse(url);
@@ -48,6 +72,7 @@ Download Rozgar app to find more government jobs!
     final nameController = TextEditingController();
     final commentController = TextEditingController();
     int selectedRating = 5;
+    bool isSubmitting = false;
 
     showModalBottomSheet(
       context: context,
@@ -126,24 +151,41 @@ Download Rozgar app to find more government jobs!
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
-                        if (nameController.text.isEmpty ||
-                            commentController.text.isEmpty) {
-                          return;
-                        }
-                        reviewsManager.addReview(
-                          widget.job.organization,
-                          Review(
-                            reviewerName: nameController.text,
-                            rating: selectedRating,
-                            comment: commentController.text,
-                          ),
-                        );
-                        Navigator.pop(context);
-                        setState(() {});
-                      },
-                      child: const Text('Submit Review',
-                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                      onPressed: isSubmitting
+                          ? null
+                          : () async {
+                              if (nameController.text.isEmpty ||
+                                  commentController.text.isEmpty) {
+                                return;
+                              }
+                              setSheetState(() {
+                                isSubmitting = true;
+                              });
+                              await reviewsManager.addReview(
+                                widget.job.organization,
+                                Review(
+                                  reviewerName: nameController.text,
+                                  rating: selectedRating,
+                                  comment: commentController.text,
+                                ),
+                              );
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              await loadReviews();
+                            },
+                      child: isSubmitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text('Submit Review',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16)),
                     ),
                   ),
                 ],
@@ -158,8 +200,6 @@ Download Rozgar app to find more government jobs!
   @override
   Widget build(BuildContext context) {
     final job = widget.job;
-    final reviews = reviewsManager.getReviews(job.organization);
-    final avgRating = reviewsManager.getAverageRating(job.organization);
 
     return Scaffold(
       appBar: AppBar(
@@ -299,7 +339,12 @@ Download Rozgar app to find more government jobs!
                 ],
               ),
               const SizedBox(height: 8),
-              if (reviews.isEmpty)
+              if (isLoadingReviews)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (reviews.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(

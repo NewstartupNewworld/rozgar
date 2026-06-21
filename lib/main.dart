@@ -7,8 +7,14 @@ import 'profile_screen.dart';
 import 'study_material_screen.dart';
 import 'splash_screen.dart';
 import 'edit_profile_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://wwggehriqipyzhapxost.supabase.co',
+    anonKey: 'sb_publishable_N8V0kVKNPkWVackcDGqNow_VvA8dFlm',
+  );
   runApp(const MyApp());
 }
 

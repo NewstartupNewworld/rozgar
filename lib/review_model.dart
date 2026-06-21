@@ -1,3 +1,5 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class Review {
   final String reviewerName;
   final int rating;
@@ -8,6 +10,14 @@ class Review {
     required this.rating,
     required this.comment,
   });
+
+  factory Review.fromMap(Map<String, dynamic> map) {
+    return Review(
+      reviewerName: map['reviewer_name'] ?? 'Anonymous',
+      rating: map['rating'] ?? 0,
+      comment: map['comment'] ?? '',
+    );
+  }
 }
 
 class ReviewsManager {
@@ -15,21 +25,29 @@ class ReviewsManager {
   factory ReviewsManager() => _instance;
   ReviewsManager._internal();
 
-  final Map<String, List<Review>> reviewsByOrg = {};
+  final supabase = Supabase.instance.client;
 
-  List<Review> getReviews(String organization) {
-    return reviewsByOrg[organization] ?? [];
+  Future<List<Review>> getReviews(String organization) async {
+    final response = await supabase
+        .from('reviews')
+        .select()
+        .eq('organization', organization)
+        .order('created_at', ascending: false);
+
+    return (response as List).map((item) => Review.fromMap(item)).toList();
   }
 
-  void addReview(String organization, Review review) {
-    if (!reviewsByOrg.containsKey(organization)) {
-      reviewsByOrg[organization] = [];
-    }
-    reviewsByOrg[organization]!.add(review);
+  Future<void> addReview(String organization, Review review) async {
+    await supabase.from('reviews').insert({
+      'organization': organization,
+      'reviewer_name': review.reviewerName,
+      'rating': review.rating,
+      'comment': review.comment,
+    });
   }
 
-  double getAverageRating(String organization) {
-    final reviews = getReviews(organization);
+  Future<double> getAverageRating(String organization) async {
+    final reviews = await getReviews(organization);
     if (reviews.isEmpty) return 0;
     final total = reviews.fold(0, (sum, r) => sum + r.rating);
     return total / reviews.length;
