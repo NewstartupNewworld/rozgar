@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'incident_model.dart';
+import 'incident_detail_screen.dart';
 
 class IncidentsScreen extends StatefulWidget {
   const IncidentsScreen({super.key});
@@ -304,115 +305,131 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                         itemCount: incidents.length,
                         itemBuilder: (context, index) {
                           final incident = incidents[index];
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 2),
+                          return GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => IncidentDetailScreen(
+                                      incident: incident),
                                 ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
+                              );
+                              loadIncidents();
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.black.withValues(alpha: 0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade50,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          incident.category,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.red.shade700,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    incident.title,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    incident.description,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey.shade700,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.location_on_outlined,
+                                          size: 14,
+                                          color: Colors.grey.shade500),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        incident.location,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey.shade600),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Icon(Icons.person_outline,
+                                          size: 14,
+                                          color: Colors.grey.shade500),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        incident.reporterName,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey.shade600),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  GestureDetector(
+                                    onTap: () => supportIncident(incident),
+                                    child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
+                                          horizontal: 14, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: Colors.red.shade50,
+                                        color: Colors.blue.shade50,
                                         borderRadius:
                                             BorderRadius.circular(20),
                                       ),
-                                      child: Text(
-                                        incident.category,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.red.shade700,
-                                        ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.favorite,
+                                              size: 16,
+                                              color: Colors.blue.shade700),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'Support (${incident.supportCount})',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.blue.shade700,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  incident.title,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
                                   ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  incident.description,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey.shade700,
-                                    height: 1.4,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Icon(Icons.location_on_outlined,
-                                        size: 14, color: Colors.grey.shade500),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      incident.location,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Icon(Icons.person_outline,
-                                        size: 14, color: Colors.grey.shade500),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      incident.reporterName,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                GestureDetector(
-                                  onTap: () => supportIncident(incident),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 14, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.favorite,
-                                            size: 16,
-                                            color: Colors.blue.shade700),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          'Support (${incident.supportCount})',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.blue.shade700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },

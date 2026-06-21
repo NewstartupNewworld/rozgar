@@ -65,3 +65,50 @@ class IncidentsManager {
         .update({'support_count': currentCount + 1}).eq('id', incidentId);
   }
 }
+
+class IncidentComment {
+  final String commenterName;
+  final String commentText;
+
+  IncidentComment({
+    required this.commenterName,
+    required this.commentText,
+  });
+
+  factory IncidentComment.fromMap(Map<String, dynamic> map) {
+    return IncidentComment(
+      commenterName: map['commenter_name'] ?? 'Anonymous',
+      commentText: map['comment_text'] ?? '',
+    );
+  }
+}
+
+class IncidentCommentsManager {
+  static final IncidentCommentsManager _instance =
+      IncidentCommentsManager._internal();
+  factory IncidentCommentsManager() => _instance;
+  IncidentCommentsManager._internal();
+
+  final supabase = Supabase.instance.client;
+
+  Future<List<IncidentComment>> getComments(int incidentId) async {
+    final response = await supabase
+        .from('incident_comments')
+        .select()
+        .eq('incident_id', incidentId)
+        .order('created_at', ascending: true);
+
+    return (response as List)
+        .map((item) => IncidentComment.fromMap(item))
+        .toList();
+  }
+
+  Future<void> addComment(
+      int incidentId, String commenterName, String commentText) async {
+    await supabase.from('incident_comments').insert({
+      'incident_id': incidentId,
+      'commenter_name': commenterName,
+      'comment_text': commentText,
+    });
+  }
+}
