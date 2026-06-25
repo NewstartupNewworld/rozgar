@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'incident_model.dart';
 
 class IncidentDetailScreen extends StatefulWidget {
@@ -42,6 +43,20 @@ class _IncidentDetailScreenState extends State<IncidentDetailScreen> {
     setState(() {
       currentSupportCount++;
     });
+  }
+
+  // Opens Google Maps centred on the incident's location text.
+  // Same pattern already used for the job "View on Map" link, so
+  // there's nothing new to learn here — just reused on a new screen.
+  Future<void> openLink(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.platformDefault,
+        webOnlyWindowName: '_blank',
+      );
+    }
   }
 
   void openAddCommentSheet() {
@@ -202,6 +217,26 @@ class _IncidentDetailScreenState extends State<IncidentDetailScreen> {
                 Text(incident.reporterName,
                     style: TextStyle(color: Colors.grey.shade600)),
               ],
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () => openLink(
+                  'https://www.google.com/maps/search/${Uri.encodeComponent(incident.location)}'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.map_outlined, color: Colors.red.shade700, size: 16),
+                  const SizedBox(width: 4),
+                  Text(
+                    'View ${incident.location} on Map',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Text(

@@ -53,8 +53,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     }
   }
 
-  void shareJob() {
-    final text = '''
+  // Builds the shareable message text for this job.
+  // Pulled out into its own method so both the generic share button
+  // and the WhatsApp-specific button can reuse the exact same message
+  // instead of duplicating the string in two places.
+  String buildShareText() {
+    return '''
 🔔 Job Alert from Rozgar!
 
 📋 ${widget.job.title}
@@ -67,7 +71,22 @@ Apply here: ${widget.job.applyLink}
 
 Download Rozgar app to find more government jobs!
 ''';
+  }
+
+  void shareJob() {
+    final text = buildShareText();
     SharePlus.instance.share(ShareParams(text: text));
+  }
+
+  // Opens WhatsApp directly with the job message pre-filled, using
+  // WhatsApp's "click to chat" link format (wa.me). No new package
+  // needed — this reuses url_launcher, which is already used above
+  // for the Maps link and the Apply Now button.
+  Future<void> shareToWhatsApp() async {
+    final text = buildShareText();
+    final whatsappUrl =
+        'https://wa.me/?text=${Uri.encodeComponent(text)}';
+    await openLink(whatsappUrl);
   }
 
   void openAddReviewSheet() {
@@ -277,6 +296,11 @@ Download Rozgar app to find more government jobs!
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.chat, color: Color(0xFF25D366)),
+            tooltip: 'Share to WhatsApp',
+            onPressed: shareToWhatsApp,
+          ),
           IconButton(
             icon: const Icon(Icons.share, color: Colors.white),
             onPressed: shareJob,

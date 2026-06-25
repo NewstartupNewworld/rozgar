@@ -121,76 +121,87 @@ class StudyMaterialScreen extends StatelessWidget {
               final color = item['color'] as Color;
               return GestureDetector(
                 onTap: () {
-  final guidedCategories = ['SSC', 'Railway', 'UPSC', 'Banking', 'Teaching', 'Medical', 'Sports'];
-  if (guidedCategories.contains(item['category'])) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              item['category'] as String,
-              style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: const Icon(Icons.list_alt, color: Colors.white),
-                label: const Text('How to Fill Application Form',
-                    style: TextStyle(color: Colors.white, fontSize: 15)),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FormGuideScreen(
-                          category: item['category'] as String),
-                    ),
-                  );
+                  // 'Defence' added — all 8 categories now show the guide sheet
+                  final guidedCategories = [
+                    'SSC', 'Railway', 'UPSC', 'Banking',
+                    'Defence', 'Teaching', 'Medical', 'Sports'
+                  ];
+                  if (guidedCategories.contains(item['category'])) {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(24)),
+                      ),
+                      builder: (context) => Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              item['category'] as String,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.list_alt,
+                                    color: Colors.white),
+                                label: const Text(
+                                    'How to Fill Application Form',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FormGuideScreen(
+                                          category:
+                                              item['category'] as String),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.open_in_new),
+                                label: const Text('Visit Official Website',
+                                    style: TextStyle(fontSize: 15)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  openLink(item['link'] as String);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    openLink(item['link'] as String);
+                  }
                 },
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: const Icon(Icons.open_in_new),
-                label: const Text('Visit Official Website',
-                    style: TextStyle(fontSize: 15)),
-                onPressed: () {
-                  Navigator.pop(context);
-                  openLink(item['link'] as String);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  } else {
-    openLink(item['link'] as String);
-  }
-},
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
@@ -242,14 +253,11 @@ class StudyMaterialScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
+                      // Minimal arrow — removed the coloured circle background
+                      Padding(
+                        padding: const EdgeInsets.all(4),
                         child: Icon(Icons.arrow_forward,
-                            color: color, size: 16),
+                            color: color, size: 18),
                       ),
                     ],
                   ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'main.dart';
+import 'auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,9 +16,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
+      final session = Supabase.instance.client.auth.currentSession;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const RozgarApp()),
+        MaterialPageRoute(
+          builder: (context) =>
+              session != null ? const RozgarApp() : const AuthScreen(),
+        ),
       );
     });
   }

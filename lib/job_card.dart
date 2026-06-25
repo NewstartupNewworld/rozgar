@@ -79,24 +79,20 @@ class _JobCardState extends State<JobCard> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                // Minimal bookmark — no background circle, just the icon itself.
+                // Saved = solid blue, unsaved = outline grey. Clean and modern.
                 GestureDetector(
                   onTap: () {
                     setState(() {
                       savedManager.toggleSave(widget.job);
                     });
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: isSaved
-                          ? Colors.blue.shade50
-                          : Colors.grey.shade100,
-                      shape: BoxShape.circle,
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
                     child: Icon(
                       isSaved ? Icons.bookmark : Icons.bookmark_outline,
-                      color: Colors.blue,
-                      size: 20,
+                      color: isSaved ? Colors.blue : Colors.grey.shade400,
+                      size: 22,
                     ),
                   ),
                 ),

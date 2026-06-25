@@ -5,32 +5,80 @@ import 'job_model.dart';
 import 'saved_jobs_screen.dart';
 import 'profile_screen.dart';
 import 'study_material_screen.dart';
-import 'splash_screen.dart';
+
 import 'edit_profile_screen.dart';
+import 'theme_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'incidents_screen.dart';
+
+import 'auth_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: 'https://wwggehriqipyzhapxost.supabase.co',
-    anonKey: 'sb_publishable_N8V0kVKNPkWVackcDGqNow_VvA8dFlm',
+    publishableKey: 'sb_publishable_N8V0kVKNPkWVackcDGqNow_VvA8dFlm',
   );
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session != null) {
+      return const RozgarApp();
+    }
+    return const AuthScreen();
+  }
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final ThemeManager _themeManager = ThemeManager();
+
+  @override
+  void initState() {
+    super.initState();
+    _themeManager.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    _themeManager.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rozgar',
+      themeMode: _themeManager.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        brightness: Brightness.light,
       ),
-      home: const SplashScreen(),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+        brightness: Brightness.dark,
+      ),
+      home: const AuthGate(),
     );
   }
 }
@@ -71,7 +119,7 @@ class _RozgarAppState extends State<RozgarApp> {
             ),
           ],
         ),
-       child: Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             navItem(Icons.home_rounded, 'Home', 0),
@@ -176,11 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onCategorySelected(String category) {
     selectedCategory = category;
-    if (category != 'Medical' &&
-        category != 'Teaching' &&
-        category != 'Sports') {
-      selectedType = 'All';
-    }
+    selectedType = 'All';
     filterJobs();
   }
 
@@ -225,13 +269,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(Icons.work, size: 32, color: Colors.white),
+                  const Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(Icons.work_outline,
+                        size: 32, color: Colors.white),
                   ),
                   const SizedBox(width: 14),
                   const Column(
@@ -279,9 +320,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       hintText: 'Search jobs...',
                       hintStyle: TextStyle(color: Colors.grey.shade400),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
+                      prefixIcon:
+                          Icon(Icons.search, color: Colors.grey.shade400),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
                 ),
@@ -334,49 +377,47 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              if (selectedCategory == 'Medical' ||
-                  selectedCategory == 'Teaching' ||
-                  selectedCategory == 'Sports')
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                  child: Row(
-                    children: ['All', 'Government', 'Private'].map((type) {
-                      final isSelected = selectedType == type;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: GestureDetector(
-                          onTap: () => onTypeSelected(type),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
+              // Government / Private filter — always visible for all categories
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                child: Row(
+                  children: ['All', 'Government', 'Private'].map((type) {
+                    final isSelected = selectedType == type;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: GestureDetector(
+                        onTap: () => onTypeSelected(type),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Colors.green.shade600
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
                               color: isSelected
                                   ? Colors.green.shade600
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.green.shade600
-                                    : Colors.grey.shade300,
-                              ),
+                                  : Colors.grey.shade300,
                             ),
-                            child: Text(
-                              type,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? Colors.white
-                                    : Colors.grey.shade700,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              ),
+                          ),
+                          child: Text(
+                            type,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.grey.shade700,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
                             ),
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                    );
+                  }).toList(),
                 ),
+              ),
               const SizedBox(height: 8),
               if (getRecommendedJobs().isNotEmpty &&
                   selectedCategory == 'All' &&
@@ -403,8 +444,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 230,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
                     itemCount: getRecommendedJobs().length,
                     itemBuilder: (context, index) {
                       return SizedBox(
@@ -426,32 +467,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-             filteredJobs.isEmpty
-    ? Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60),
-        child: Center(
-          child: Column(
-            children: [
-              Icon(Icons.search_off,
-                  size: 64, color: Colors.grey.shade300),
-              const SizedBox(height: 16),
-              const Text(
-                'No jobs found',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Try a different search or filter',
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-              ),
-            ],
-          ),
-        ),
-      )
-    : Column(
+              filteredJobs.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 60),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Icon(Icons.search_off,
+                                size: 64, color: Colors.grey.shade300),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'No jobs found',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Try a different search or filter',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey.shade400),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Column(
                       children: filteredJobs
                           .map((job) => JobCard(job: job))
                           .toList(),

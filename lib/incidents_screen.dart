@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'incident_model.dart';
 import 'incident_detail_screen.dart';
 
@@ -47,6 +48,34 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
     await loadIncidents();
   }
 
+  // Gets the device/browser GPS coordinates and returns them as a string.
+  // Steps:
+  //   1. Check if location services are enabled at all
+  //   2. Check/request permission from the user
+  //   3. Get the actual position
+  // Returns null if anything fails (permission denied, GPS off, etc.)
+  Future<String?> getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return null;
+    }
+    if (permission == LocationPermission.deniedForever) return null;
+
+    final position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
+
+    // Format as "lat, long" rounded to 4 decimal places — enough precision
+    // to identify a building, not so many digits it looks overwhelming.
+    return '${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}';
+  }
+
   void openReportSheet() {
     final titleController = TextEditingController();
     final descController = TextEditingController();
@@ -54,6 +83,7 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
     final nameController = TextEditingController();
     String selectedCategory = 'Exam Issue';
     bool isSubmitting = false;
+    bool isGettingLocation = false;
     Uint8List? selectedImageBytes;
     String? selectedImageName;
 
@@ -131,13 +161,43 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                       }).toList(),
                     ),
                     const SizedBox(height: 12),
+                    // Location field with GPS auto-fill button as suffix icon.
+                    // Shows a spinner while fetching, GPS pin icon when idle.
                     TextField(
                       controller: locationController,
                       decoration: InputDecoration(
                         labelText: 'Location',
+                        hintText: 'Type or tap 📍 to use GPS',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        suffixIcon: isGettingLocation
+                            ? const Padding(
+                                padding: EdgeInsets.all(12),
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2),
+                                ),
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.my_location,
+                                    color: Colors.red.shade400),
+                                tooltip: 'Use my current location',
+                                onPressed: () async {
+                                  setSheetState(() {
+                                    isGettingLocation = true;
+                                  });
+                                  final coords = await getCurrentLocation();
+                                  setSheetState(() {
+                                    isGettingLocation = false;
+                                    if (coords != null) {
+                                      locationController.text = coords;
+                                    }
+                                  });
+                                },
+                              ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -322,13 +382,9 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
               ),
               GestureDetector(
                 onTap: openReportSheet,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Icon(Icons.add, color: Colors.white, size: 26),
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.add, color: Colors.white, size: 28),
                 ),
               ),
             ],
@@ -476,31 +532,22 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                                   const SizedBox(height: 12),
                                   GestureDetector(
                                     onTap: () => supportIncident(incident),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 14, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade50,
-                                        borderRadius:
-                                            BorderRadius.circular(20),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.favorite,
-                                              size: 16,
-                                              color: Colors.blue.shade700),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            'Support (${incident.supportCount})',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.blue.shade700,
-                                            ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.favorite_outline,
+                                            size: 16,
+                                            color: Colors.blue.shade400),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Support (${incident.supportCount})',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.blue.shade400,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
